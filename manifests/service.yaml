@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: javademo
+  namespace: namespace-workflow-1729956696108
+  labels:
+    kubernetes.azure.com/generator: devhub
+spec:
+  type: LoadBalancer
+  selector:
+    app: javademo
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
