@@ -14,8 +14,8 @@ FROM tomcat:8.5-jre8
 # Set the working directory
 WORKDIR /app
 # Copy the built JAR file from the previous stage
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target/javademo.war app.war
 
 EXPOSE 8080
 RUN rm -fr /usr/local/tomcat/webapps/ROOT
-COPY /app/app.jar /usr/local/tomcat/webapps/ROOT.war
+COPY /app/app.war /usr/local/tomcat/webapps/ROOT.war
