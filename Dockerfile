@@ -18,4 +18,4 @@ COPY --from=build /app/target/javademo.war app.war
 
 EXPOSE 8080
 RUN rm -fr /usr/local/tomcat/webapps/ROOT
-COPY /app/app.war /usr/local/tomcat/webapps/ROOT.war
+COPY app.war /usr/local/tomcat/webapps/ROOT.war
