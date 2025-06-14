@@ -1,6 +1,6 @@
 
 # Stage 1: Build the application using Maven
-FROM maven:latest AS build
+FROM maven:3.3-jdk-8 AS build
 # Set the working directory
 WORKDIR /app
 # Copy the Maven project files
