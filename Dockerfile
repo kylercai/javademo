@@ -11,11 +11,7 @@ RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application using Tomcat 8.5
 FROM tomcat:8.5-jre8
-# Set the working directory
-WORKDIR /app
-# Copy the built JAR file from the previous stage
-COPY --from=build /app/target/javademo.war app.war
-
 EXPOSE 8080
 RUN rm -fr /usr/local/tomcat/webapps/ROOT
-COPY app.war /usr/local/tomcat/webapps/ROOT.war
+# Copy the built JAR file from the previous stage
+COPY --from=build /app/target/javademo.war /usr/local/tomcat/webapps/ROOT.war
