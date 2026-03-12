@@ -2,22 +2,60 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: javademo
+  labels:
+    app: javademo
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: javademo
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   template:
     metadata:
       labels:
         app: javademo
     spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
       containers:
       - name: javademo
-        image: ckacr001.azurecr.cn/javademo:294
+        image: javademo:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        env:
+        - name: JAVA_OPTS
+          value: "-Xms128m -Xmx384m"
       nodeSelector:
         kubernetes.io/os: linux
 ---
@@ -26,8 +64,7 @@ apiVersion: v1
 metadata:
   name: javademo
 spec:
-  type:
-    LoadBalancer
+  type: LoadBalancer
   selector:
     app: javademo
   ports:
